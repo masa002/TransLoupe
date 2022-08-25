@@ -7,77 +7,65 @@ from PIL import ImageGrab
 from PIL import Image
 
 import pyocr
-import langid
 from googletrans import Translator
 
 import tkinter as tk
-
-def click():
-    frame2 = tk.Toplevel
-    frame2.geometry('1000x100')
-    
 
 def resourcePath(filename):
     if hasattr(sys, "_MEIPASS"):
         return os.path.join(sys._MEIPASS, filename)
     return os.path.join(filename)
 
-def ocr(width, height, lang):
-    img = ImageGrab.grab(bbox=(width, height, width+100, height+100))
-    img.save('screenshot.jpg')
+def ocr(x, y, lang):
+    while True:
+        img = ImageGrab.grab(bbox=(x+5, y+30, x+305, y+60))
+        img.save('./image.jpg')
+        line_boxs=tools[0].image_to_string(img,lang=lang,builder=pyocr.builders.LineBoxBuilder())
 
-    line_boxs=tools[0].image_to_string(
-        img,
-        lang=lang,
-        builder=pyocr.builders.LineBoxBuilder()
-    )
+        texts = []
+        for line_box in line_boxs:
+            texts.append(line_box.content)
 
-    texts_data = []
-    for line_box in line_boxs:
-        pos1, pos2 = line_box.position
-        text_data = {'text': line_box.content, 'pos1': pos1, 'pos2': pos2}
-        texts_data.append(text_data)
+        return texts
 
-    return texts_data
-
-def translate(txt, dest='ja'):
+def translate(txt, dest):
     return translator.translate(txt, dest=dest).text
 
 def main():
     while True:
         try:
-            var.get()
-            ocr(frame1.winfo_x(), frame1.winfo_y(), 'eng')
+            lang = langs[var.get()]
+            for text in ocr(frame.winfo_x(), frame.winfo_y(), lang[0]):
+                txt.delete(0, tk.END)
+                txt.insert(tk.END, translate(text, lang[1]))
+            time.sleep(1)
         except:
             return
-    
-    texts_data = ocr('tha')
-    i = 0
-    while True:
-        try:
-            print(translate(texts_data[i]['text']))
-            i += 1
-        except:
-            break
+
 
 def window():
-    radio1 = tk.Radiobutton(frame1, text='JPN -> ENG', value=0, variable=var, font=font)
-    radio1.place(x=10, y=10)
-    radio2 = tk.Radiobutton(frame1, text='ENG -> JPN', value=1, variable=var, font=font)
-    radio2.place(x=160, y=10)
-    radio3 = tk.Radiobutton(frame1, text='JPN -> THA', value=2, variable=var, font=font)
-    radio3.place(x=10, y=50)
-    radio4 = tk.Radiobutton(frame1, text='THA -> JPN', value=3, variable=var, font=font)
-    radio4.place(x=160, y=50)
-    radio5 = tk.Radiobutton(frame1, text='ENG -> THA', value=4, variable=var, font=font)
-    radio5.place(x=10, y=90)
-    radio6 = tk.Radiobutton(frame1, text='THA -> ENG', value=5, variable=var, font=font)
-    radio6.place(x=160, y=90)
+    global txt
 
-    button = tk.Button(frame1, text='click', command=click, font=font)
-    button.place(x=100, y=110, width=100)
+    lbl = tk.Label(background='snow')
+    lbl.place(x=0, y=0, width=300, height=30)
 
-    frame1.mainloop()
+    txt = tk.Entry()
+    txt.place(x=0, y=30, width=300, height=30)
+
+    radio1 = tk.Radiobutton(frame, text='JPN -> ENG', value=0, variable=var, font=font)
+    radio1.place(x=10, y=90)
+    radio2 = tk.Radiobutton(frame, text='ENG -> JPN', value=1, variable=var, font=font)
+    radio2.place(x=160, y=90)
+    radio3 = tk.Radiobutton(frame, text='JPN -> THA', value=2, variable=var, font=font)
+    radio3.place(x=10, y=130)
+    radio4 = tk.Radiobutton(frame, text='THA -> JPN', value=3, variable=var, font=font)
+    radio4.place(x=160, y=130)
+    radio5 = tk.Radiobutton(frame, text='ENG -> THA', value=4, variable=var, font=font)
+    radio5.place(x=10, y=170)
+    radio6 = tk.Radiobutton(frame, text='THA -> ENG', value=5, variable=var, font=font)
+    radio6.place(x=160, y=170)
+
+    frame.mainloop()
 
 if __name__ == '__main__':
     translator = Translator()
@@ -88,17 +76,19 @@ if __name__ == '__main__':
     
     tools = pyocr.get_available_tools()
 
-    frame1 = tk.Tk()
+    frame = tk.Tk()
     var = tk.IntVar()
     var.set(0)
     font = ("Helvetica", 12)
     iconfile = './resources/icon.ico'
 
-    frame1.iconbitmap(default=iconfile)
-    frame1.title('TransLoupe') 
-    frame1.geometry("300x400")
+    frame.iconbitmap(default=iconfile)
+    frame.title('TransLoupe') 
+    frame.geometry("300x400")
+    frame.wm_attributes("-transparentcolor", "snow")
+    frame.resizable(0,0)
 
-    langs = ['jpn', 'eng', 'tha']
+    langs = {0: ['jpn', 'en'], 1: ['eng', 'ja'], 2: ['jpn', 'th'], 3: ['tha', 'ja'], 4: ['eng', 'th'], 5: ['tha', 'en']}
 
     thread = threading.Thread(target=main)
     thread.start()
