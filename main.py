@@ -11,6 +11,10 @@ import langid
 from googletrans import Translator
 
 import tkinter as tk
+
+def click():
+    frame2 = tk.Toplevel
+    frame2.geometry('1000x100')
     
 
 def resourcePath(filename):
@@ -70,7 +74,7 @@ def window():
     radio6 = tk.Radiobutton(frame1, text='THA -> ENG', value=5, variable=var, font=font)
     radio6.place(x=160, y=90)
 
-    button = tk.Button(frame1, text='click', command=main, font=font)
+    button = tk.Button(frame1, text='click', command=click, font=font)
     button.place(x=100, y=110, width=100)
 
     frame1.mainloop()
