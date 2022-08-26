@@ -89,9 +89,9 @@ if __name__ == '__main__':
     var = tk.IntVar()
     var.set(0)
     font = ('Helvetica', 12)
-    iconfile = './resources/icon.ico'
+    iconfile = resourcePath('resources/icon.ico')
     frame.iconbitmap(default=iconfile)
-    frame.title("TransLoupe v1.0.1") 
+    frame.title("TransLoupe v1.1.1")
     frame.geometry('300x250')
     frame.wm_attributes('-transparentcolor', 'snow')
     frame.resizable(0,0)
