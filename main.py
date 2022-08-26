@@ -18,7 +18,9 @@ def resourcePath(filename):
 
 def ocr(x, y, lang):
     while True:
+        # screenshot
         img = ImageGrab.grab(bbox=(x+5, y+30, x+305, y+60))
+        # ocr
         line_boxs=tools[0].image_to_string(img,lang=lang,builder=pyocr.builders.LineBoxBuilder())
 
         texts = []
@@ -98,6 +100,7 @@ if __name__ == '__main__':
     txt = tk.Entry()
     txt.place(x=0, y=30, width=300, height=30)
 
+    # def langs
     langs = {0: ['jpn', 'en'], 1: ['eng', 'ja'], 2: ['jpn', 'th'], 3: ['tha', 'ja'], 4: ['eng', 'th'], 5: ['tha', 'en']}
 
     # create thread and start
