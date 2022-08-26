@@ -91,7 +91,7 @@ if __name__ == '__main__':
     font = ('Helvetica', 12)
     iconfile = './resources/icon.ico'
     frame.iconbitmap(default=iconfile)
-    frame.title("TransLoupe") 
+    frame.title("TransLoupe v1.0.0") 
     frame.geometry('300x250')
     frame.wm_attributes('-transparentcolor', 'snow')
     frame.resizable(0,0)
