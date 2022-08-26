@@ -19,7 +19,6 @@ def resourcePath(filename):
 def ocr(x, y, lang):
     while True:
         img = ImageGrab.grab(bbox=(x+5, y+30, x+305, y+60))
-        img.save('./image.jpg')
         line_boxs=tools[0].image_to_string(img,lang=lang,builder=pyocr.builders.LineBoxBuilder())
 
         texts = []
@@ -36,8 +35,9 @@ def main():
         try:
             lang = langs[var.get()]
             for text in ocr(frame.winfo_x(), frame.winfo_y(), lang[0]):
+                text = translate(text, lang[1])
                 txt.delete(0, tk.END)
-                txt.insert(tk.END, translate(text, lang[1]))
+                txt.insert(tk.END, text)
             time.sleep(1)
         except:
             return
@@ -84,7 +84,7 @@ if __name__ == '__main__':
 
     frame.iconbitmap(default=iconfile)
     frame.title('TransLoupe') 
-    frame.geometry("300x400")
+    frame.geometry("300x250")
     frame.wm_attributes("-transparentcolor", "snow")
     frame.resizable(0,0)
 
